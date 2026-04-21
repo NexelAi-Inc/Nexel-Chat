@@ -82,7 +82,8 @@ CORS_ORIGINS=https://nexelchat.netlify.app,https://nexelai.netlify.app,http://lo
 For Nexel Chat to work for everyone, the Python API must be reachable from the internet. Choose one of these paths:
 
 1. Fastest testing path: run the API on your PC and expose it with Cloudflare Tunnel or ngrok. Use the tunnel URL as `VITE_API_BASE_URL` in Netlify.
-2. Production path: deploy the FastAPI backend to a cloud machine with enough RAM or GPU for your model. Use that public HTTPS URL as `VITE_API_BASE_URL`.
+2. Demo path without using your PC: run the API in Google Colab using `colab/Nexel_Chat_API_Colab.ipynb`. Use the generated Cloudflare Tunnel URL as `VITE_API_BASE_URL` in Netlify.
+3. Production path: deploy the FastAPI backend to a cloud machine with enough RAM or GPU for your model. Use that public HTTPS URL as `VITE_API_BASE_URL`.
 
 Example public setup:
 
@@ -105,6 +106,20 @@ Backend `.env` on the API host:
 ```text
 CORS_ORIGINS=https://nexelchat.netlify.app,https://nexelai.netlify.app
 ```
+
+## Google Colab API
+
+Colab is useful when you do not want your PC hosting the backend. It is still temporary: sessions can disconnect, sleep, or reset, and the quick tunnel URL changes each time.
+
+Open `colab/Nexel_Chat_API_Colab.ipynb` in Google Colab, enable a GPU runtime, run all cells, then copy the printed values into Netlify:
+
+```text
+VITE_API_BASE_URL=https://generated-name.trycloudflare.com
+VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
+VITE_NEXEL_AI_URL=https://nexelai.netlify.app
+```
+
+Redeploy Nexel Chat after changing the Netlify variables.
 
 ## Do Not Commit
 
