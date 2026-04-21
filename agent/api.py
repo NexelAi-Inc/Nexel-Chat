@@ -103,7 +103,7 @@ def _complete(prompt: str, max_tokens: int | None = None, temperature: float | N
     )
 
 
-@app.get("/", include_in_schema=False)
+@app.get("/", include_in_schema=False, response_model=None)
 def index() -> FileResponse | dict[str, str]:
     index_file = dist_dir / "index.html"
     if not index_file.exists():
