@@ -30,30 +30,6 @@ const QUICK_LINKS = [
   { label: "Explore", icon: "..." },
 ];
 
-const FEATURE_CARDS = [
-  {
-    eyebrow: "Write",
-    title: "Stories, scripts, and polished drafts",
-    text: "Move from quick ideas to longer creative sessions without leaving the Nexel ecosystem.",
-  },
-  {
-    eyebrow: "Build",
-    title: "Modern product and coding support",
-    text: "Use Nexel Chat for debugging, UI thinking, implementation help, and sharper product decisions.",
-  },
-  {
-    eyebrow: "Remember",
-    title: "Saved sessions that survive restarts",
-    text: "Your recent conversations stay available so useful ideas and unfinished work remain easy to revisit.",
-  },
-];
-
-const WORKFLOW = [
-  "Sign in to unlock the protected assistant workspace.",
-  "Start a new conversation or continue a saved thread.",
-  "Pick up from your saved recent conversations whenever you return.",
-];
-
 const createConversationId = () =>
   `web-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -326,6 +302,7 @@ export default function App() {
       setAuthReady(true);
       if (user) {
         setShowAuthModal(false);
+        setView("chat");
         void saveUserProfile(user).catch(() => {});
       } else if (view === "chat") {
         setView("home");
@@ -633,7 +610,6 @@ export default function App() {
             </div>
 
             <div className="landing-header-actions">
-              <div className="mode-pill">Mode: {currentMode}</div>
               <a className="landing-secondary" href={COMPANY_URL}>
                 Nexel Ai
               </a>
@@ -660,113 +636,19 @@ export default function App() {
           </header>
 
           <main className="landing-main">
-            <section className="hero-panel">
-              <div className="hero-copy">
-                <h1>Your GPT workspace for writing, code, and ideas.</h1>
-                <p>
-                  Sign in to chat with Nexel, continue saved conversations, and route between
-                  fast and smart AI modes when the backend is connected.
-                </p>
-
-                <div className="hero-actions">
-                  <button className="landing-primary" onClick={startNewConversation}>
-                    {authUser ? "Start Nexel Chat" : "Create your account"}
+            <section className="minimal-landing">
+              <div className="minimal-card">
+                <div className="minimal-mark">N</div>
+                <h1>Nexel Chat</h1>
+                <p>Your protected GPT-style assistant workspace.</p>
+                <div className="minimal-actions">
+                  <button className="landing-primary" onClick={() => openAuth("signin")}>
+                    Log in
                   </button>
-                  <button className="landing-secondary" onClick={openWorkspace}>
-                    {authUser ? "Enter Nexel Chat" : "Sign in to continue"}
+                  <button className="landing-secondary" onClick={() => openAuth("signup")}>
+                    Sign up
                   </button>
                 </div>
-
-                <div className="hero-stats">
-                  <div className="stat-card">
-                    <span className="stat-number">{recentConversations.length}</span>
-                    <span className="stat-label">saved chats</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-number">3</span>
-                    <span className="stat-label">routing modes</span>
-                  </div>
-                  <div className="stat-card">
-                    <span className="stat-number">{authUser ? "On" : "Auth"}</span>
-                    <span className="stat-label">protected chat</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hero-preview">
-                <div className="preview-window">
-                  <div className="preview-topbar">
-                    <span className="preview-dot" />
-                    <span className="preview-dot" />
-                    <span className="preview-dot" />
-                  </div>
-                  <div className="preview-content">
-                    <div className="preview-pill">Nexel Chat</div>
-                    <h3>A separate workspace for actual assistant sessions.</h3>
-                    <p>
-                      Use one account for your writing sessions, coding help, and ongoing
-                      conversations without losing recent context.
-                    </p>
-                    <div className="preview-input">
-                      <span>{authUser ? authUser.email : "Email and password access"}</span>
-                      <button type="button" onClick={openWorkspace}>
-                        Open
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section className="feature-grid">
-              {FEATURE_CARDS.map((card) => (
-                <article key={card.title} className="feature-card">
-                  <div className="feature-eyebrow">{card.eyebrow}</div>
-                  <h2>{card.title}</h2>
-                  <p>{card.text}</p>
-                </article>
-              ))}
-            </section>
-
-            <section className="workflow-panel">
-              <div>
-                <div className="hero-eyebrow">How it flows</div>
-                <h2>Built like a product, not just a chat box.</h2>
-              </div>
-              <div className="workflow-list">
-                {WORKFLOW.map((step, index) => (
-                  <div key={step} className="workflow-item">
-                    <div className="workflow-number">0{index + 1}</div>
-                    <p>{step}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="recent-strip">
-              <div className="recent-strip-header">
-                <h2>Recent conversations</h2>
-                <button className="landing-secondary" onClick={openWorkspace}>
-                  View all in Nexel Chat
-                </button>
-              </div>
-              <div className="recent-grid">
-                {recentConversations.length ? (
-                  recentConversations.map((item) => (
-                    <button
-                      key={item.id}
-                      className="recent-card"
-                      onClick={() => handleSelectConversation(item.id)}
-                    >
-                      <div className="recent-card-title">{getConversationLabel(item)}</div>
-                      <div className="recent-card-meta">Continue this conversation</div>
-                    </button>
-                  ))
-                ) : (
-                  <div className="recent-empty">
-                    No saved chats yet. Create an account and start your first conversation.
-                  </div>
-                )}
               </div>
             </section>
           </main>

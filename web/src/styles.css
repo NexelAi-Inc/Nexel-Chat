@@ -165,11 +165,9 @@ button {
   padding: 0 10px 16px;
 }
 
-.hero-panel,
-.workflow-panel,
-.recent-strip {
+.minimal-card {
   display: grid;
-  gap: 24px;
+  gap: 16px;
   padding: 28px;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 34px;
@@ -178,42 +176,49 @@ button {
   box-shadow: var(--shadow-md);
 }
 
-.hero-panel {
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  align-items: center;
+.minimal-landing {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  height: 100%;
 }
 
-.hero-eyebrow,
-.feature-eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.75rem;
-  color: var(--text-faint);
-  font-weight: 700;
+.minimal-card {
+  width: min(460px, 100%);
+  justify-items: center;
+  text-align: center;
 }
 
-.hero-copy h1,
-.workflow-panel h2,
-.recent-strip h2,
-.feature-card h2 {
-  margin: 10px 0 0;
+.minimal-mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #062818;
+  font-weight: 800;
+}
+
+.minimal-card h1 {
+  margin: 2px 0 0;
   font-family: "Sora", "Manrope", sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
   letter-spacing: -0.04em;
 }
 
-.hero-copy h1 {
-  font-size: clamp(2.6rem, 5vw, 4.5rem);
-  line-height: 1.02;
+.minimal-card p {
+  margin: 0;
+  color: var(--text-soft);
+  line-height: 1.6;
 }
 
-.hero-copy p,
-.feature-card p,
-.workflow-item p,
-.preview-content p {
-  margin: 16px 0 0;
-  color: var(--text-soft);
-  line-height: 1.68;
-  font-size: 1rem;
+.minimal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
 }
 
 .hero-stats,
