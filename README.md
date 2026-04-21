@@ -27,13 +27,15 @@ Or run the launcher:
 
 ## Frontend Connection
 
-The Nexel Ai website should set:
+The Nexel Chat frontend needs a public FastAPI backend URL:
 
 ```text
-VITE_API_BASE_URL=https://your-nexel-chat-api-host.example.com
+VITE_API_BASE_URL=https://your-public-nexel-chat-api.example.com
 ```
 
-Add the deployed website domain to `CORS_ORIGINS` in this repo's `.env`.
+Do not use `http://127.0.0.1:8000` in Netlify for public use. That address only means "this same computer", so it works for local testing but fails for everyone else.
+
+Add the deployed frontend domains to `CORS_ORIGINS` in this repo's backend `.env`.
 
 ## Run Chat Frontend
 
@@ -62,9 +64,9 @@ Publish directory: web/dist
 Set:
 
 ```text
-VITE_API_BASE_URL=https://your-nexel-chat-api-host.example.com
+VITE_API_BASE_URL=https://your-public-nexel-chat-api.example.com
 VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
-VITE_NEXEL_AI_URL=https://your-nexel-ai-company-site.example.com
+VITE_NEXEL_AI_URL=https://nexelai.netlify.app
 ```
 
 `VITE_API_BASE_URL` must be a live hosted Nexel Chat API. Netlify only hosts the static React frontend, so leaving this blank makes chat requests fail because `/generate` points at Netlify instead of FastAPI.
@@ -72,7 +74,36 @@ VITE_NEXEL_AI_URL=https://your-nexel-ai-company-site.example.com
 The API host must allow your Netlify domain in `CORS_ORIGINS`, for example:
 
 ```text
-CORS_ORIGINS=https://nexelchat.netlify.app,http://localhost:5173,http://127.0.0.1:5173
+CORS_ORIGINS=https://nexelchat.netlify.app,https://nexelai.netlify.app,http://localhost:5173,http://127.0.0.1:5173
+```
+
+## Make It Public
+
+For Nexel Chat to work for everyone, the Python API must be reachable from the internet. Choose one of these paths:
+
+1. Fastest testing path: run the API on your PC and expose it with Cloudflare Tunnel or ngrok. Use the tunnel URL as `VITE_API_BASE_URL` in Netlify.
+2. Production path: deploy the FastAPI backend to a cloud machine with enough RAM or GPU for your model. Use that public HTTPS URL as `VITE_API_BASE_URL`.
+
+Example public setup:
+
+```text
+Nexel Ai website: https://nexelai.netlify.app
+Nexel Chat frontend: https://nexelchat.netlify.app
+Nexel Chat API: https://api.your-domain.com
+```
+
+Netlify variables for Nexel Chat:
+
+```text
+VITE_API_BASE_URL=https://api.your-domain.com
+VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
+VITE_NEXEL_AI_URL=https://nexelai.netlify.app
+```
+
+Backend `.env` on the API host:
+
+```text
+CORS_ORIGINS=https://nexelchat.netlify.app,https://nexelai.netlify.app
 ```
 
 ## Do Not Commit
