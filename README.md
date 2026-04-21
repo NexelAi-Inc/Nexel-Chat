@@ -67,6 +67,14 @@ VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
 VITE_NEXEL_AI_URL=https://your-nexel-ai-company-site.example.com
 ```
 
+`VITE_API_BASE_URL` must be a live hosted Nexel Chat API. Netlify only hosts the static React frontend, so leaving this blank makes chat requests fail because `/generate` points at Netlify instead of FastAPI.
+
+The API host must allow your Netlify domain in `CORS_ORIGINS`, for example:
+
+```text
+CORS_ORIGINS=https://nexelchat.netlify.app,http://localhost:5173,http://127.0.0.1:5173
+```
+
 ## Do Not Commit
 
 Keep these local only:

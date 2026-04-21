@@ -13,9 +13,18 @@ const STORAGE_KEY_PREFIX = "nexa-web-conversation";
 const MODE_KEY = "nexa-web-mode";
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 const COMPANY_URL = import.meta.env.VITE_NEXEL_AI_URL || "https://github.com/NexelAi-Inc/nexel-ai";
+const IS_NETLIFY = typeof window !== "undefined" && window.location.hostname.includes("netlify.app");
 
 function apiUrl(path) {
   return `${API_BASE_URL}${path}`;
+}
+
+function requireApiBase() {
+  if (!API_BASE_URL && IS_NETLIFY) {
+    throw new Error(
+      "Nexel Chat API is not connected yet. Set VITE_API_BASE_URL in Netlify to your hosted backend URL, then redeploy."
+    );
+  }
 }
 
 const PROJECTS = [
@@ -370,6 +379,10 @@ export default function App() {
       setConversations([]);
       return;
     }
+    if (!API_BASE_URL && IS_NETLIFY) {
+      setConversations([]);
+      return;
+    }
     const params = new URLSearchParams({ user_id: userId });
     const response = await fetch(apiUrl(`/conversations?${params.toString()}`));
     if (!response.ok) return;
@@ -379,6 +392,10 @@ export default function App() {
 
   const loadConversation = async (conversationId, userId = authUser?.uid) => {
     if (!userId) {
+      setMessages([]);
+      return;
+    }
+    if (!API_BASE_URL && IS_NETLIFY) {
       setMessages([]);
       return;
     }
@@ -458,6 +475,7 @@ export default function App() {
     setStatus(`Thinking in ${currentMode} mode...`);
 
     try {
+      requireApiBase();
       const response = await fetch(apiUrl("/generate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -471,8 +489,10 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({ detail: "Request failed." }));
-        throw new Error(error.detail || "Request failed.");
+        const error = await response.json().catch(() => ({
+          detail: `API request failed with HTTP ${response.status}. Check VITE_API_BASE_URL and backend CORS settings.`,
+        }));
+        throw new Error(error.detail || `API request failed with HTTP ${response.status}.`);
       }
 
       const data = await response.json();
