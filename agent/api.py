@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import threading
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +22,8 @@ from .prompting import (
 )
 
 settings = load_settings()
-llm = build_backend(settings)
+_llm: Any | None = None
+_llm_lock = threading.Lock()
 memory = MemoryStore(settings.memory_dir)
 history = ChatHistoryStore(settings.memory_dir)
 app = FastAPI(title="Nexel Chat API", version="1.0.0")
@@ -82,11 +84,20 @@ def _direct_response(prompt: str, user_name: str | None) -> str | None:
     return None
 
 
+def _get_llm() -> Any:
+    global _llm
+    if _llm is None:
+        with _llm_lock:
+            if _llm is None:
+                _llm = build_backend(settings)
+    return _llm
+
+
 @app.on_event("startup")
 def prewarm_fast_backend() -> None:
     def _worker() -> None:
         try:
-            prewarm = getattr(llm, "prewarm", None)
+            prewarm = getattr(_get_llm(), "prewarm", None)
             if callable(prewarm):
                 prewarm("fast")
         except Exception:
@@ -96,7 +107,7 @@ def prewarm_fast_backend() -> None:
 
 
 def _complete(prompt: str, max_tokens: int | None = None, temperature: float | None = None) -> str:
-    return llm.complete(
+    return _get_llm().complete(
         prompt,
         max_tokens=max_tokens if max_tokens is not None else settings.max_tokens,
         temperature=temperature if temperature is not None else settings.temperature,
@@ -202,7 +213,7 @@ def generate(req: GenerateRequest) -> dict[str, str]:
                 mode = "smart"
             max_tokens = max(max_tokens, 1400)
             temperature = max(temperature, 0.8)
-        response = llm.complete(
+        response = _get_llm().complete(
             prompt,
             max_tokens=max_tokens,
             temperature=temperature,
