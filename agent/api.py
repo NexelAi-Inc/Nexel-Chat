@@ -97,6 +97,35 @@ def _looks_like_greeting(prompt: str) -> bool:
     return prompt_lower in {"hi", "hello", "helllo", "hey", "yo", "sup"}
 
 
+def _looks_like_how_are_you(prompt: str) -> bool:
+    prompt_lower = " ".join(prompt.lower().replace("?", "").replace("!", "").split())
+    patterns = (
+        "how are you",
+        "how are you doing",
+        "how you doing",
+        "how's it going",
+        "hows it going",
+    )
+    return any(pattern in prompt_lower for pattern in patterns)
+
+
+def _looks_like_positive_status(prompt: str) -> bool:
+    prompt_lower = " ".join(prompt.lower().replace("!", "").replace(".", "").split())
+    patterns = (
+        "i'm doing great",
+        "im doing great",
+        "i am doing great",
+        "i'm good",
+        "im good",
+        "i am good",
+        "i'm doing good",
+        "im doing good",
+        "i'm fine",
+        "im fine",
+    )
+    return any(pattern in prompt_lower for pattern in patterns)
+
+
 def _direct_response(prompt: str, user_name: str | None) -> str | None:
     if user_name and _looks_like_name_question(prompt):
         return f"Your name is {user_name}."
@@ -104,6 +133,10 @@ def _direct_response(prompt: str, user_name: str | None) -> str | None:
         return "I'm Nexa, the assistant inside Nexel Chat."
     if _looks_like_greeting(prompt):
         return f"Hi {user_name}. What would you like to work on?" if user_name else "Hi. What would you like to work on?"
+    if _looks_like_how_are_you(prompt):
+        return "I'm doing well, thanks for asking. I'm ready to help."
+    if _looks_like_positive_status(prompt):
+        return f"Glad to hear that, {user_name}." if user_name else "Glad to hear that."
     return None
 
 
