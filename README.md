@@ -64,6 +64,7 @@ Set:
 ```text
 VITE_API_BASE_URL=https://your-nexel-chat-api-host.example.com
 VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
+VITE_NEXEL_AI_URL=https://your-nexel-ai-company-site.example.com
 ```
 
 ## Do Not Commit

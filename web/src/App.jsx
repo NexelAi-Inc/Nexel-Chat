@@ -12,6 +12,7 @@ import { auth, saveUserProfile } from "./firebase";
 const STORAGE_KEY_PREFIX = "nexa-web-conversation";
 const MODE_KEY = "nexa-web-mode";
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+const COMPANY_URL = import.meta.env.VITE_NEXEL_AI_URL || "https://github.com/NexelAi-Inc/nexel-ai";
 
 function apiUrl(path) {
   return `${API_BASE_URL}${path}`;
@@ -633,6 +634,9 @@ export default function App() {
 
             <div className="landing-header-actions">
               <div className="mode-pill">Mode: {currentMode}</div>
+              <a className="landing-secondary" href={COMPANY_URL}>
+                Nexel Ai
+              </a>
               {authUser ? (
                 <>
                   <button className="landing-secondary" onClick={openWorkspace}>
