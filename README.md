@@ -1,6 +1,6 @@
 ﻿# Nexel Chat
 
-Nexel Chat is the AI/API workspace for Nexel Ai. It contains the FastAPI backend, local model routing, persistent memory, and optional VS Code extension integration.
+Nexel Chat is the GPT-style workspace for Nexel Ai. It contains the signed-in chat frontend, FastAPI backend, local model routing, persistent memory, and optional VS Code extension integration.
 
 ## Setup
 
@@ -34,6 +34,37 @@ VITE_API_BASE_URL=https://your-nexel-chat-api-host.example.com
 ```
 
 Add the deployed website domain to `CORS_ORIGINS` in this repo's `.env`.
+
+## Run Chat Frontend
+
+```powershell
+cd web
+npm install
+npm run dev
+```
+
+For production:
+
+```powershell
+cd web
+npm run build
+```
+
+## Netlify Frontend
+
+If you host the Nexel Chat frontend on Netlify, use:
+
+```text
+Build command: cd web && npm install && npm run build
+Publish directory: web/dist
+```
+
+Set:
+
+```text
+VITE_API_BASE_URL=https://your-nexel-chat-api-host.example.com
+VITE_FIREBASE_DATABASE_URL=https://nexel-ai-default-rtdb.firebaseio.com
+```
 
 ## Do Not Commit
 

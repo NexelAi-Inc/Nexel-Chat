@@ -11,6 +11,8 @@ models/
 node_modules/
 dist/
 build/
+web/node_modules/
+web/dist/
 *.log
 *.vsix
 nexa-vscode/node_modules/
