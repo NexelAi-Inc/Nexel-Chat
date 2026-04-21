@@ -44,7 +44,10 @@ def load_settings() -> Settings:
         memory_dir=os.getenv("MEMORY_DIR", "./data/chroma"),
         cors_origins=[
             origin.strip()
-            for origin in os.getenv("CORS_ORIGINS", "http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5173,http://localhost:5173").split(",")
+            for origin in os.getenv(
+                "CORS_ORIGINS",
+                "https://nexelchat.netlify.app,https://nexelai.netlify.app,http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5173,http://localhost:5173",
+            ).split(",")
             if origin.strip()
         ],
     )
